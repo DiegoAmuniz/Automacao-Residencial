@@ -1,59 +1,34 @@
+#include <SPI.h>
 #include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+#include <DHT.h>
 
-#define SSID ""
-#define PASS  ""
+#define DHTPIN D1 // Digital pin D1
+#define DHTTYPE DHT11 // DHT 11
+//Configure o Auth Token enviado para o email
+char auth[] = "..."; //Token do novo
 
-String head = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
-String html_1 = "<!DOCTYPE html><html><body><div id='main'>";
-String html_2 = "<form id='F1' action='LEDON'></form><br>";
-String html_3 = "<form id='F2' action='LEDOFF'></form><br>";
-String html_4 = "</div></body></html>";
-
-String req;
-String data;
-void connectWiFi();
-
-WiFiServer server(80);
-
-void setup() {
-  Serial.begin(9600);
-  connectWiFi();
-  server.begin();
+// suas credenciais de wifi
+// senha "" para redes livres
+char ssid[] = "..."; //node da rede wifi
+char pass[] = "..."; //senha da rede wifi
+DHT dht(DHTPIN, DHTTYPE);
+// No app para difinir a frquencia que o indicador é atualizado
+configure PUSH
+void setup(){
+Serial.begin(115200);
+Blynk.begin(auth, ssid, pass);
+dht.begin();
 }
+void loop(){
+float h = dht.readHumidity();
+float t = dht.readTemperature();
+if (isnan(h) || isnan(t)) {
+ Serial.println("Falha na leitura do sensor!");
 
-void loop() {
-  WiFiClient client = server.available();
-  if(!client){
-    
-  }else{
-    //do after client connected
-    req = client.readStringUntil('\r');
-    req += '\n';
-    for(int i = 5; i < req.length() - 10; i++){
-      data += req[i];
-    }
-    data += '\n';
-    Serial.write(data.c_str());
-    data = "";
-    client.print(head);
-    client.print(html_1 );
-    client.print(html_2 );
-    client.print(html_3 );
-    client.print(html_4);
-	client.flush();
-  }
-  delay(10);
 }
-
-void connectWiFi(){
-  WiFi.begin(SSID, PASS);
-  Serial.print("Connecting");
-  while(WiFi.status() != WL_CONNECTED){
-    Serial.print(".");
-    delay(500);
-  }
-  Serial.print("\nCOnnected to: ");
-  Serial.println(SSID);
-  Serial.print("IP: ");
-  Serial.println(WiFi.localIP());
+Blynk.virtualWrite(V5, h); //V5 para umidade
+Blynk.virtualWrite(V6, t); //v6 para temperatura
+Blynk.run(); // inicializa o Blynk
+delay(1000);
 }
