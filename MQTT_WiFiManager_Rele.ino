@@ -1,11 +1,3 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Arquivo:   MQTT_WiFiManager_Rele.ino
-//Tipo:      Exemplo de uso das bibliotecas WiFiManager e PubSubClient para ESP8266 na IDE do Arduino
-//Autor:     Marco Rabelo para o canal Infortronica Para Zumbis (www.youtube.com/c/InfortronicaParaZumbis)
-//Descricao: Curso de ESP8266 - Utilizando MQTT e gerenciador de wifi para controlar um relé.
-//Video:     https://youtu.be/oX4ttJEULmA
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 /*
 Equivalencia das saidas Digitais entre NodeMCU e ESP8266 (na IDE do Arduino)
 NodeMCU - ESP8266
